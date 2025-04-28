@@ -9,11 +9,12 @@ function App() {
     <ReduxProvider>
       <Router>
         <div className="bg-white min-h-screen">
-
           <Notification />
           <Routes>
+            <Route path="/" element={<Dashboard />} />{" "}
             <Route path="/signin" element={<Signin />} />{" "}
             <Route path="/dashboard/*" element={<Dashboard />} />{" "}
+
           </Routes>
         </div>
       </Router>

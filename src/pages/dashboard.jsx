@@ -9,7 +9,10 @@ import { useState } from "react";
 const Dashboard = () => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user")) || null;
+  if(localStorage.getItem("token")===undefined || localStorage.getItem("token")===null){
+    window.location.href = "/signin"; 
 
+  }
   const sidebarItems = [
     {
       label: "X",
@@ -156,6 +159,8 @@ const Dashboard = () => {
         {/* Content Area */}
         <div className="border rounded-tl-md bg-white h-[94%]">
           <Routes>
+          <Route path="/" element={<Listofapplications />} />
+
             <Route path="listofapplications" element={<Listofapplications />} />
             <Route
               path="listofapplications/:id"
