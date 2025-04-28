@@ -594,7 +594,9 @@ const Singleapplicationpage = () => {
             </div>
 
             <div className="text-black flex flex-col w-full p-2">
-              {Object.entries(documents).map(([key, value]) => (
+              {Object.entries(documents)
+               .filter(([_, value]) => value !== "N/A") 
+              .map(([key, value]) => (
                 <div
                   key={key}
                   className="flex justify-between items-center py-2 border-b last:border-b-0"
@@ -635,64 +637,4 @@ const Singleapplicationpage = () => {
 
 export default Singleapplicationpage;
 
-{
-  /* <div className="actions-buttons flex gap-4 mt-4">
-      {role === 'admin' && (
-        <>
-          {status === 'submitted' && (
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-              Approve Application
-            </button>
-          )}
-        </>
-      )}
 
-      {role === 'lender' && (
-        <>
-          {status === 'assigned_to_lender' && (
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-              Lender Approve Application
-            </button>
-          )}
-
-          {status === 'invoice_uploaded' && (
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-              Fund Invoice
-            </button>
-          )}
-
-          {status === 'buyer_approved' && (
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-              Close Application
-            </button>
-          )}
-        </>
-      )}
-
-      {role === 'msme' && (
-        <>
-          {status === 'under_review' && (
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-              Upload Invoice
-            </button>
-          )}
-
-          {status === 'invoice_funded' && (
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-              Mark as Repaid
-            </button>
-          )}
-        </>
-      )}
-
-      {role === 'buyer' && (
-        <>
-          {status === 'invoice_uploaded' && (
-            <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-              Approve Invoice
-            </button>
-          )}
-        </>
-      )}
-    </div> */
-}
