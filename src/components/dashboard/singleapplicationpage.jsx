@@ -554,7 +554,7 @@ const Singleapplicationpage = () => {
 
           {singleApplication?.uploadedInvoice !== "N/A" && (
             <div className="w-full ">
-              <h2 className="font-semibold mb-2">Upload invoice</h2>
+              <h2 className="font-semibold mb-2">Uploaded invoice</h2>
               <div className="overflow-x-auto overflow-y-hidden w-full border rounded-md custom-scrollbar">
                 <div className="font-semibold h-[4rem] text-text-muted uppercase text-xs flex items-center justify-between w-full p-2 bg-[#F0F4F8] border-b">
                   <div className="w-[50%] text-center">Document name</div>
@@ -563,9 +563,9 @@ const Singleapplicationpage = () => {
 
                 <div className="text-black flex flex-col w-full p-2">
                   {singleApplication?.uploadedInvoice && (
-                    <div className="flex items-center justify-between w-full border-b py-2">
+                    <div className="flex items-center justify-between w-full  py-2">
                       <div className="w-[50%] text-center truncate text-xs font-medium">
-                        {formatDocumentName(singleApplication.uploadedInvoice)}
+                      Invoice
                       </div>
 
                       <div className="w-[50%] flex justify-center">

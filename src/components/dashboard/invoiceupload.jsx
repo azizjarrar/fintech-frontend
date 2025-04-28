@@ -93,6 +93,52 @@ const UploadInvoice = ({ applicationId, setSingleApplication }) => {
     return !isFormValid;
   };
 
+
+
+
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+  
+    if (!file) return;
+  
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+  
+    if (!allowedTypes.includes(file.type)) {
+      dispatch(
+        setNotification({
+          message: "Only PDF and image (JPEG, JPG, PNG) files are allowed.",
+          isVisible: true,
+          bg: "bg-error-default",
+        })
+      );
+      e.target.value = null;
+      return;
+    }
+  
+    setFile(e.target.files[0])
+  };
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="mb-2">
       <SubmitButton
@@ -159,7 +205,7 @@ const UploadInvoice = ({ applicationId, setSingleApplication }) => {
                       name="invoice"
                       type="file"
                       accept="application/pdf,image/*"
-                      onChange={(e) => setFile(e.target.files[0])}
+                      onChange={handleFileChange}
                       required
                       className="block w-full text-sm text-gray-500
                         file:mr-4 file:py-2 file:px-4
