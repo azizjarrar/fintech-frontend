@@ -1,15 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import axios_instance from "../api/axios_instance";
 import Spinner from "./spinner";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-const Notifications = ({css}) => {
-
+const Notifications = ({ css }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState(null);
   const [loading, setLoading] = useState(true);
-const [counter,setCounter]=useState(0)
+  const [counter, setCounter] = useState(0);
   const dropdownRef = useRef();
 
   const toggleDropdown = () => {
@@ -17,28 +16,36 @@ const [counter,setCounter]=useState(0)
   };
   const getNotifications = async () => {
     try {
-      const response = await axios_instance.get(
-        `/notification`
-      );
-      setCounter(response.data.length)
+      const response = await axios_instance.get(`/notification`);
       setNotifications(response?.data);
-
+      setCounter(0);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
-
+  useEffect(() => {
+    if (isOpen) {
+      getNotifications();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
-
-      getNotifications();
- 
+    const getNotificationsUnread = async () => {
+      try {
+        const response = await axios_instance.get(
+          `/notification/getNotificationsUnread`
+        );
+        console.log(response);
+        setCounter(response.data.numOfUnRead);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getNotificationsUnread();
   }, []);
-
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,9 +63,6 @@ const [counter,setCounter]=useState(0)
     };
   }, [isOpen]);
 
-
- 
-
   return (
     <div
       ref={dropdownRef}
@@ -66,31 +70,40 @@ const [counter,setCounter]=useState(0)
     >
       <div
         className=" flex items-center cursor-pointer transition justify-around rounded-full relative"
-        onClick={toggleDropdown} 
+        onClick={toggleDropdown}
       >
-     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
-</svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
+          />
+        </svg>
 
         {counter > 0 && (
           <div className="absolute w-4 h-4 rounded-full bg-red-600 text-white flex items-center justify-around  text-xs top-0 right-0 ">
-           
             {counter}
           </div>
         )}
       </div>
       {/* Dropdown menu */}
       {isOpen && (
-        <div
-          className="absolute top-8 left-1/2 z-40 transform  -translate-x-[76%] md:-translate-x-1/2 mt-2 h-64 w-[20rem] !max-w-screen sm:w-72 custom-scrollbar overflow-y-auto bg-white border border-gray-200 rounded-lg flex flex-col items-center justify-start"
-          >
+        <div className="absolute top-8 left-1/2 z-40 transform  -translate-x-[76%] md:-translate-x-1/2 mt-2 h-64 w-[20rem] !max-w-screen sm:w-72 custom-scrollbar overflow-y-auto bg-white border border-gray-200 rounded-lg flex flex-col items-center justify-start">
           {loading ? (
             <div className="m-auto">
-              <Spinner /></div>
+              <Spinner />
+            </div>
           ) : notifications?.length > 0 ? (
             <div className="w-full px-1  ">
               <h3 className="text-left font-semibold mb-2 p-1">
-          Notifications
+                Notifications
               </h3>
               {notifications.map((n, i) => {
                 const formattedDate = new Date(n.createdAt).toLocaleString(
@@ -107,9 +120,12 @@ const [counter,setCounter]=useState(0)
                 );
 
                 return (
-                
-                   <Notif key={i} href={n.link} title={n.title}  date={formattedDate}   />
-              
+                  <Notif
+                    key={i}
+                    href={n.link}
+                    title={n.title}
+                    date={formattedDate}
+                  />
                 );
               })}
             </div>
@@ -144,45 +160,35 @@ const [counter,setCounter]=useState(0)
 
 export default Notifications;
 
-
-
-
-const Notif  = ({href,title,date})=>{
-  return(
+const Notif = ({ href, title, date }) => {
+  return (
     <Link
+      to={`/dashboard/listofapplications/${href}`}
+      className="border-b last:border-b-0  p-2 flex items-center space-x-3 hover:bg-bgHoverLight cursor-pointer transition"
+    >
+      {/* Icon */}
+      <div className="p-2 bg-gray-100 rounded-full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6 text-gray-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
+          />
+        </svg>
+      </div>
 
-    to={`/dashboard/listofapplications/${href}`}
-    className="border-b last:border-b-0  p-2 flex items-center space-x-3 hover:bg-bgHoverLight cursor-pointer transition"
-  >
-    {/* Icon */}
-    <div className="p-2 bg-gray-100 rounded-full">
-      
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="size-6 text-gray-600"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
-        />
-      </svg>
-    </div>
-
-    {/* Notification Content */}
-    <div className="flex flex-col">
-      <h3 className="font-semibold text-gray-800 text-xs">
-      
-{title}
-      </h3>
-      <p className="text-sm text-gray-500 text-xs">
-        {date}
-      </p>
-    </div>
-  </Link>
-  )
-}
+      {/* Notification Content */}
+      <div className="flex flex-col">
+        <h3 className="font-semibold text-gray-800 text-xs">{title}</h3>
+        <p className="text-sm text-gray-500 text-xs">{date}</p>
+      </div>
+    </Link>
+  );
+};

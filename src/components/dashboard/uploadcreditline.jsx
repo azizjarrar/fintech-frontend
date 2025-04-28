@@ -44,7 +44,23 @@ export default function ApplyCreditLine() {
   ];
 
   const handleFileChange = (e, field) => {
-    setFormData({ ...formData, [field]: e.target.files[0] });
+    const file = e.target.files[0];
+  
+    if (!file) return;
+  
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+  
+    if (!allowedTypes.includes(file.type)) {
+      setErrorMessage("Only PDF and image (JPEG, JPG, PNG) files are allowed.");
+      e.target.value = null;
+      return;
+    }
+  
+    setErrorMessage(""); 
+    setFormData((prevState) => ({
+      ...prevState,
+      [field]: file,
+    }));
   };
 
   const handleInputChange = (e) => {
