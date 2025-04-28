@@ -17,6 +17,18 @@ const Singleapplicationpage = () => {
   const [step, setStep] = useState(0);
   const [documents, setDocuments] = useState({});
 
+  const documentMapping = {
+    cr: "Commercial Registration Certificate",
+    tradeLicense: "Trade License",
+    taxCard: "Tax Card",
+    estdCertificate: "Establishment Certificate",
+    auditedReport: "Audited Financial Statement",
+    bankStatement: "Bank Statement",
+    creditScore: "Credit Score"
+  };
+
+
+
   useEffect(() => {
     const fetchApplication = async () => {
       try {
@@ -602,7 +614,8 @@ const Singleapplicationpage = () => {
                   className="flex justify-between items-center py-2 border-b last:border-b-0"
                 >
                   <div className="w-[50%] text-center font-semibold text-xs truncate">
-                    {formatDocumentName(value)}
+                  {documentMapping[key]}
+
                   </div>
 
                   <div className="w-[50%] text-center flex justify-center p-2">

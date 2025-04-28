@@ -11,7 +11,6 @@ const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem("user")) || null;
   if(localStorage.getItem("token")===undefined || localStorage.getItem("token")===null){
     window.location.href = "/signin"; 
-
   }
   const sidebarItems = [
     {
@@ -54,7 +53,7 @@ const Dashboard = () => {
           <Madadlogo />
 
           <Link
-            key="2"
+            key="1"
             to="/dashboard/listofapplications"
             className={`w-full py-2 rounded-md font-semibold transition mb-2 text-center flex items-center mt-10 ${
               !isSidebarOpen ? "justify-between" : "justify-around"
@@ -110,8 +109,8 @@ const Dashboard = () => {
                   d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
                 />
               </svg>
+              <span className={`hidden lg:block font-semibold ml-2`}> Log Out</span>
 
-              {/* <span className="font-semibold ">Log Out</span> */}
             </button>
           </div>
         </div>
